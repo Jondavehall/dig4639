@@ -127,6 +127,18 @@ export default class App extends Component {
       now: 0,
     })
   }
+  save = () => {
+    clearInterval(this.timer)
+    const { laps, now, start } = this.state
+    const [firstLap, ...other] = laps
+    const greeting = 'Save your laps by taking a screenshot!'
+    this.setState({
+      laps: [firstLap + now - start, ...other],
+      start: 0,
+      now: 0,
+    })
+    return <h1>{greeting}</h1>;
+  }
   resume = () => {
     const now = new Date().getTime()
     this.setState({
@@ -149,16 +161,16 @@ export default class App extends Component {
         {laps.length === 0 && (
           <ButtonsRow>
             <RoundButton
-              title='Lap'
-              color='#F9F9F9'
-              background='#FFCC01'
-              disabled
-            />
-            <RoundButton
               title='Start'
               color='#F9F9F9'
               background='#38B449'
               onPress={this.start}
+            />
+            <RoundButton
+              title='Stop'
+              color='#F9F9F9'
+              background='#9D0A0D'
+              disabled
             />
           </ButtonsRow>
         )}
@@ -167,8 +179,14 @@ export default class App extends Component {
             <RoundButton
               title='Lap'
               color='#F9F9F9'
-              background='#FFCC01'
+              background='#38B449'
               onPress={this.lap}
+            />
+            <RoundButton
+              title='Save'
+              color='#F9F9F9'
+              background='#FFCC01'
+              onPress={this.save}
             />
             <RoundButton
               title='Stop'
@@ -181,17 +199,24 @@ export default class App extends Component {
         {laps.length > 0 && start === 0 && (
           <ButtonsRow>
             <RoundButton
+              title='Resume'
+              color='#F9F9F9'
+              background='#38B449'
+              onPress={this.resume}
+            />
+            <RoundButton
+              title='Save'
+              color='#F9F9F9'
+              background='#FFCC01'
+              onPress={this.save}
+            />
+            <RoundButton
               title='Reset'
               color='#F9F9F9'
               background='#9D0A0D'
               onPress={this.reset}
             />
-            <RoundButton
-              title='Start'
-              color='#F9F9F9'
-              background='#38B449'
-              onPress={this.resume}
-            />
+
           </ButtonsRow>
         )}
         <LapsTable laps={laps} timer={timer}/>
@@ -201,6 +226,7 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: '#E0E0E0',
